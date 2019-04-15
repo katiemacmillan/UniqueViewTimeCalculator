@@ -1,35 +1,39 @@
-var fragmentHandler = {
-    addTimeFragment: function (fragment, timeFragments) {
-        const newStart = fragment.startTime;
-        const newEnd = fragment.endTime;
-        fragment.time = newEnd - newStart;
+/* A service to deal with fragment pieces */
+var fragmentService = {
+    /* Add a time fragment to the given list of fragments */
+    addTimeFragment: function (newFragment, timeFragments) {
+        const newStart = newFragment.startTime;
+        const newEnd = newFragment.endTime;
 
         for (var f in timeFragments) {
-            const oldStart = timeFragments[f].startTime;
-            const oldEnd = timeFragments[f].endTime;
+            var oldFragment = timeFragments[f];
+            const oldStart = oldFragment.startTime;
+            const oldEnd = oldFragment.endTime;
 
             if (newEnd < oldStart) {
                 // time fragment comes before the existing fragment
-                timeFragments.splice(f, 0, fragment);
+                timeFragments.splice(f, 0, newFragment);
                 return timeFragments;
 
             } else if (newStart < oldStart) {
                 if (newEnd > oldEnd) {
                     // time fragment extends existing fragment start and end time
-                    timeFragments[f] = fragment;
+                    timeFragments[f] = newFragment;
                     return timeFragments;
                 } else {
                     // time fragment extends existing fragment start time
-                    timeFragments[f].startTime = newStart;
-                    timeFragments[f].time = oldEnd - newStart;
+                    oldFragment.startTime = newStart;
+                    oldFragment.time = oldFragment.endTime - oldFragment.startTime;
+                    timeFragments[f] = oldFragment;
                     return timeFragments;
                 }
 
             } else if (newStart >= oldStart && newStart <= oldEnd) {
                 if (newEnd > oldEnd) {
                     // time fragment extends existing fragment end time
-                    timeFragments[f].endTime = newEnd;
-                    timeFragments[f].time = newEnd - oldStart;
+                    oldFragment.endTime = newEnd;
+                    oldFragment.time = oldFragment.endTime - oldFragment.startTime;
+                    timeFragments[f] = oldFragment;
                 } else {
                     // time is completely within viewed fragment
                     return timeFragments;
@@ -37,7 +41,7 @@ var fragmentHandler = {
             }
         }
         // if we reach here, the fragment comes after all existing fragments
-        timeFragments.push(fragment);
+        timeFragments.push(newFragment);
         return timeFragments;
     },
 
@@ -50,29 +54,39 @@ var fragmentHandler = {
         var fragments = [];
         const count = timeFragments.length;
 
+        // loop through fragments looking for start/end time overlaps
         do {
-            var frag1 = timeFragments[current];
-            var frag2 = timeFragments[next];
+            if (next < count) {
+                var compareFragment = timeFragments[current];
+                var storeFragment = timeFragments[next];
 
-            var overlap = frag1.endTime > frag2.startTime
-            while (overlap) {
-                // extend frag2's start time
-                frag2.startTime = frag1.startTime;
-                frag2.time = frag2.endTime - frag2.startTime;
+                var overlap = compareFragment.endTime > storeFragment.startTime;
 
-                next += 1;
-                if (next < count && frag1.endTime > timeFragments[next + 1].startTime) {
-                    frag1 = frag2;
-                    frag2 = timeFragments[next];
-                } else {
-                    overlap = false;
+                // continue to build up fragment until no more overlaps are found, always increasing start time of latest fragment
+                while (overlap) {
+                    storeFragment.startTime = compareFragment.startTime;
+                    storeFragment.time = storeFragment.endTime - storeFragment.startTime;
+
+                    next += 1;
+                    if (next < count && compareFragment.endTime > timeFragments[next].startTime) {
+                        compareFragment = storeFragment;
+                        storeFragment = timeFragments[next];
+                    } else {
+                        overlap = false;
+                    }
                 }
-            }
-            current = next;
-            next += 1;
-            fragments.push(frag2);
 
-        } while (next < count);
+                fragments.push(storeFragment);
+                current = next;
+                next += 1;
+
+            } else {
+                // make sure the last fragment gets added if it's not accounted for
+                fragments.push(timeFragments[current]);
+                current += 1;
+            }
+
+        } while (current < count);
 
         return fragments;
     },
@@ -87,4 +101,4 @@ var fragmentHandler = {
 
 }
 
-module.exports = fragmentHandler;
+module.exports = fragmentService;

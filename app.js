@@ -1,7 +1,7 @@
-var express = require('express');
-var path = require('path');
 var bodyParser = require('body-parser');
+var express = require('express');
 var multer = require('multer');
+var path = require('path');
 
 var timeService = require('./service/timeService.js');
 
@@ -36,7 +36,6 @@ app.get('/', function (req, res, next) {
 
 // retreive and display results
 app.post('/', function (req, res, next) {
-    console.log(req.body.timeStamps);
     var result = timeService.calculateUVT(req.body.timeStamps);
 
     if (result.error) {
@@ -45,10 +44,8 @@ app.post('/', function (req, res, next) {
             message: result.error
         });
     } else {
-        console.log(result.fragments);
-        console.log(result.totalTime);
         res.render('times', {
-            title: 'TIMES',
+            title: 'VIEW TIME',
             fragments: result.fragments,
             time: result.totalTime
         });
