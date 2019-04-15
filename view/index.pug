@@ -1,0 +1,17 @@
+html
+    head
+        title= title
+        link(rel='stylesheet', href='/style/style.css')
+
+    body
+        div.sizer
+            h1.pageHeader Unique Viewing Time Calculator
+            p#index--explaination.sizer Enter start and end times for viewed fragments in the boxes below. For each set of times, enter the start time followed by a comma followed by the end time. Sets should be separated by commas as well.
+            div.sizer
+                h3 Example: 
+                p For the following start-end time sets (200 - 209), (30 - 100), (10 - 15), (50 - 75) The input should be "200,209,30,100,10,15,50,75"
+            div.sizer
+                form(action = "/", method = "POST")
+                    button(type = "submit") Calculate UVT
+                    br
+                    textarea(name="timeStamps", cols="50", rows="30", placeholder="200,209,30,100,10,15,50,75")

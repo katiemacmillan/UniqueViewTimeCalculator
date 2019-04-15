@@ -1,0 +1,51 @@
+/* generic styles */
+.sizer{
+    margin: auto;
+    width: 75%;
+}
+.pageHeader{
+    padding: 20px 20px 20px 20px;
+    width: max-content;
+    margin: auto;
+    background-color: black;
+    color: white;
+}
+.inline{
+    display: inline-block;
+    padding: 10px;
+}
+
+/* error.pug specific styles */
+#error--header {
+    padding: 20px 20px 20px 20px;
+    width: max-content;
+    margin: auto;
+    background-color: red;
+}
+#error--message{
+    font-weight: 200;
+    font-size: 1.2em;
+}
+/* index.pug specific styles */
+#index--explaination{
+    padding: 20px 20px 20px 20px;
+    font-size: 1.2em;
+    border-top: 1px black solid;
+    border-bottom: 1px black solid;
+}
+
+/* times.pug specific styles */
+#times--tableCaption{
+    font-size: 1.2em;
+    background-color: black;
+    color: white;
+}
+.times--tableHeader{
+    border: 2px black solid;
+    padding: 10px;
+}
+
+.times--tableBody{
+    text-align: center;
+    border: 1px black solid;
+}

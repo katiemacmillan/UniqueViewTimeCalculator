@@ -1,0 +1,14 @@
+html
+    head
+        title= 'ERROR'
+        link(rel='stylesheet', href='/style/style.css')
+    body
+        div.sizer
+            h1#error--header An Error Has Occured
+            hr
+            p#error--message= message
+            button(onclick="back()") Back
+    script.
+        function back() {
+            window.location.href = '/'
+        }

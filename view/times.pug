@@ -1,0 +1,30 @@
+html
+    head
+        title= title
+        link(rel='stylesheet', href='/style/style.css')
+
+    body
+        div.sizer
+            h1.pageHeader Unique Viewing Times
+            div.sizer
+                h3#times--header.inline Total Unique Viewed Time:
+                h3.inline= time + " ms"
+                hr
+                table
+                    caption#times--tableCaption Viewed Fragments
+                    tHead
+                        th.times--tableHeader="Fragment Start"
+                        th.times--tableHeader="Fragment End"
+                        th.times--tableHeader="Fragment Time(ms)"
+                    tbody
+                        each frag in fragments
+                            tr
+                                td.times--tableBody= frag.startTime
+                                td.times--tableBody= frag.endTime
+                                td.times--tableBody= frag.time
+
+                button(onclick="back()") Back
+    script.
+        function back() {
+            window.location.href = '/'
+        }
